@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw';
 
 let history = [];
 
@@ -7,7 +7,6 @@ export const handlers = [
     const url = new URL(request.url);
     const requestId = url.searchParams.get('id');
     const chat = history.find(({ id }) => id == requestId) ?? {}
-    console.log('chat', chat, requestId)
     return HttpResponse.json(chat);
   }),
   http.get('https://api.example.com/history', () => {
@@ -22,7 +21,6 @@ export const handlers = [
   http.post('https://api.example.com/message', async ({ request }) => {
     const { id: requestId, message, file } = await request.json();
     let chat = history.find(({ id }) => id == requestId);
-    console.log('file api', file)
     if (!chat) {
       chat = { id: requestId, userMessages: [], botMessages: [] }
       history.push(chat);
@@ -33,6 +31,21 @@ export const handlers = [
     botMessages.push('Hola, como estas? ' + Math.random())
 
     return HttpResponse.json(history);
+  }),
+  http.get('https://api.example.com/search', async ({ request }) => {
+    const url = new URL(request.url);
+    const text = url.searchParams.get('message').toLowerCase();
+    console.log('text', text)
+    let results = history.filter(({ userMessages, botMessages }) => {
+      return userMessages.find(({ message }) => message.includes(text)) || botMessages.includes(text);
+    }).map(({ id, userMessages, botMessages }) => {
+      const title = userMessages.find(({ message }) => message.includes(text))?.message ?? userMessages[0]?.message;
+      const info = botMessages.find(m => m.includes(text)) ?? botMessages[0];
+      return { id, title, info };
+    });
+    console.log('results', results)
+
+    return HttpResponse.json(results);
   }),
   http.delete('https://api.example.com/delete', async ({ request }) => {
     const url = new URL(request.url);
