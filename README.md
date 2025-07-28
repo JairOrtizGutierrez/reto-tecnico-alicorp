@@ -99,6 +99,7 @@ Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** q
       └── 📄 sendChatMessage.ts       → Envía y guarda mensaje en el chat
 
 📁 models
+  ├── 📄 IChat.ts
   ├── 📄 IFile.ts
   ├── 📄 IHistory.ts
   └── 📄 IMessage.ts
