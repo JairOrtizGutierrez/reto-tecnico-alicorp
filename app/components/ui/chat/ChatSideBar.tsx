@@ -87,11 +87,16 @@ const ChatSideBarStateHandler: React.FC<ChatSideBarStateHandlerProps> = ({ data,
 }
 
 export const ChatSideBar = () => {
-  const { changeId, regenerateId, startResuming, stopResuming } = useStore();
+  const { id: currentId, changeId, regenerateId, startResuming, stopResuming } = useStore();
   const { data, isLoading, error, isRefetching } = useQuery(getChatHistoryQueryOptions());
   const { mutate } = useDeleteChat();
 
   const handleDeleteChat = (id: string) => {
+    if (currentId === id) {
+      stopResuming();
+      regenerateId();
+    }
+
     gsap.to(`.item-${id}`, {
       height: 0,
       margin: 0,
