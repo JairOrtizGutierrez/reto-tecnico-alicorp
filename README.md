@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chat Empresarial – Aplicación Web Interactiva
 
-## Getting Started
+Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** que permite a los usuarios realizar consultas sobre una empresa (misión, visión, organigrama, etc.), enviar archivos y revisar historiales de conversación. Las respuestas se generan simulando una API mediante **MSW** (Mock Service Worker).
 
-First, run the development server:
+## 🚀 Funcionalidades Principales
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Chat Interactivo:** Envía mensajes, recibe respuestas automáticas simuladas y adjunta archivos (imágenes, videos, PDFs).
+- **Gestión de Historial:** Revisa, elimina y continúa conversaciones anteriores.
+- **Búsqueda:** Filtra conversaciones mediante un buscador basado en coincidencias textuales.
+- **Adjuntos:**
+  - Imágenes: Renderizadas directamente en el chat.
+  - Videos y PDFs: Mostrados como enlaces de descarga.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧱 Tecnologías Utilizadas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 15** – Framework principal
+- **Tailwind CSS** – Estilos utilitarios
+- **ShadCN UI** – Componentes accesibles y personalizables
+- **TanStack React Query** – Manejo de datos
+- **Zustand** – Estado global reactivo
+- **GSAP (GreenSock)** – Animaciones fluidas
+- **MSW (Mock Service Worker)** – Simulación de API
+- **pnpm** – Gestor de paquetes rápido
+- **TypeScript** – Tipado estricto
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ⚙️ Instalación del Proyecto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clonar el repositorio:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   git clone https://github.com/JairOrtizGutierrez/reto-tecnico-alicorp.git
+   cd reto-tecnico-alicorp
 
-## Deploy on Vercel
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Instalar las dependencias**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   pnpm install
+
+   ```
+
+3. **Ejecuta el entorno de desarrollo**
+   ```bash
+   pnpm run dev
+   ```
