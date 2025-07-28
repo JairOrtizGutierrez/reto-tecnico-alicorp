@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { ChatSideBar } from "@/components/ui/chat/ChatSideBar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -26,16 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
-      >
-        <SidebarProvider>
-          <ChatSideBar />
-          <main className="w-full">
-            <SidebarTrigger className="mt-5 ml-5 cursor-pointer absolute" />
+      <body className={`${geistSans.variable} antialiased dark`}>
+        <QueryProvider>
+          <SidebarProvider>
             {children}
-          </main>
-        </SidebarProvider>
+          </SidebarProvider>
+        </QueryProvider>
       </body>
     </html>
   );

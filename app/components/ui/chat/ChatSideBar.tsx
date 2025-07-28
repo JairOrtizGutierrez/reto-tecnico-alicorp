@@ -1,11 +1,15 @@
+
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarSeparator } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MessageSquare, MoreHorizontal, Search, SquarePen, Trash2, X } from "lucide-react"
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+import { Frown, MessageSquare, MessageSquareMore, MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+import { ChatFinder } from "@/components/ui/chat/ChatFinder"
+import { useQuery } from "@tanstack/react-query"
+import { getChatHistoryQueryOptions } from "@/lib/query"
+import { useDeleteChat } from "@/hooks/useDeleteChat"
+import gsap from "gsap"
+import { useStore } from "@/hooks/useStore"
 
 const items = [
   {
@@ -27,51 +31,38 @@ const items = [
   {
     title: "Settings",
     url: "#",
-  },
-  // {
-  //   title: "Home",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Inbox",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Calendar",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Search",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Home",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Inbox",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Calendar",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Search",
-  //   url: "#",
-  // },
-  // {
-  //   title: "Settings",
-  //   url: "#",
-  // },
+  }
 ]
 
-
 export const ChatSideBar = () => {
+  const { changeId, regenerateId, startResuming, stopResuming } = useStore();
+  const { data, isLoading, error } = useQuery(getChatHistoryQueryOptions());
+  const { mutate } = useDeleteChat();
+
+  if (isLoading) return <div>Loading</div>
+  if (error || !data) return <div>Error</div>
+
+  const handleDeleteChat = (id: string) => {
+    gsap.to(`.item-${id}`, {
+      height: 0,
+      margin: 0,
+      opacity: 0,
+      duration: .5,
+      ease: 'power2.out',
+      onComplete: () => mutate(id)
+    });
+  }
+
+  const handleOpenChat = (id: string) => {
+    changeId(id);
+    startResuming();
+  }
+
+  const handleNewChat = () => {
+    regenerateId();
+    stopResuming();
+  }
+
   return (
     <Sidebar className="py-5 pl-5 rounded-xl overflow-hidden border-none">
       <SidebarHeader className="pt-3 md:pt-2 px-3 md:mb-5 bg-neutral-800 md:rounded-xl">
@@ -89,79 +80,55 @@ export const ChatSideBar = () => {
       <SidebarContent className="bg-neutral-800 md:rounded-xl px-3 md:py-3 gap-0">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-
-                  <Dialog>
-                    <form>
-                      <DialogTrigger asChild>
-                        <Button className="w-full flex justify-start bg-neutral-700 text-neutral-400 font-normal hover:bg-neutral-700 cursor-pointer">
-                          <Search />
-                          <span>Buscar chats</span>
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="md:max-w-[650px] [&>button:last-child]:hidden">
-                        <DialogHeader className="flex flex-row gap-x-4">
-                          <DialogTitle className="hidden">Buscar chats</DialogTitle>
-                          <Input id="name-1" name="name" placeholder="Buscar chats..." />
-                          <DialogClose asChild>
-                            <Button type="button" variant="secondary">
-                              <X />
-                            </Button>
-                          </DialogClose>
-                        </DialogHeader>
-                        <Separator className="mt-1" />
-                        <div className="grid gap-4">
-                          <div className="text-center">Sin resultados</div>
-                        </div>
-                      </DialogContent>
-                    </form>
-                  </Dialog>
-
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
+            <ChatFinder />
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup className="flex-1 overflow-hidden">
           <SidebarGroupLabel className="px-0 mb-2">Chats</SidebarGroupLabel>
-          <SidebarGroupContent className="h-full">
+          <SidebarGroupContent className="h-[calc(100%-40px)]">
             <ScrollArea className="h-full [&_[data-slot=scroll-area-viewport]>div]:block!">
-              <SidebarMenu className="gap-2">
-                {items.map((item, index) => (
-                  <SidebarMenuItem key={index} className="bg-neutral-700 rounded-md">
-                    <SidebarMenuButton asChild className="hover:bg-neutral-600">
-                      <a href={item.url} className="h-auto px-4 py-3 gap-3">
-                        <MessageSquare />
-                        <div className="flex flex-col w-[85%]">
-                          <span>{item.title}</span>
-                          <span className="text-xs text-neutral-400 overflow-x-hidden whitespace-nowrap overflow-ellipsis">Lorem ipsum, dolor sit amet consectetur</span>
+              <SidebarMenu className="gap-0">
+                {
+                  data.length ? data.map((item) => (
+                    <SidebarMenuItem key={item.id} className={`bg-neutral-700 rounded-md overflow-hidden mb-2 last:mb-0 item-${item.id}`}>
+                      <SidebarMenuButton asChild className="hover:bg-neutral-600 h-auto px-4 py-3 gap-3 cursor-pointer" onClick={() => handleOpenChat(item.id)}>
+                        <div>
+                          <MessageSquare />
+                          <div className="flex flex-col w-[85%]">
+                            <span>{item.title}</span>
+                            <span className="text-xs text-neutral-400 overflow-x-hidden whitespace-nowrap overflow-ellipsis">{item.info}</span>
+                          </div>
                         </div>
-                      </a>
-                    </SidebarMenuButton>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild className="!top-1/2 -translate-y-1/2 right-3">
-                        <SidebarMenuAction>
-                          <MoreHorizontal />
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent side="right" align="start">
-                        <DropdownMenuItem variant="destructive">
-                          <Trash2 />
-                          <span>Eliminar</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                ))}
+                      </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild className="!top-1/2 -translate-y-1/2 right-3">
+                          <SidebarMenuAction>
+                            <MoreHorizontal />
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                          <DropdownMenuItem variant="destructive" onClick={() => handleDeleteChat(item.id)}>
+                            <Trash2 />
+                            <span>Eliminar</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  )) : (
+                    <div className="text-neutral-400 text-center flex flex-col justify-center items-center gap-2 absolute top-1/2 left-1/2 transform -translate-1/2">
+                      <MessageSquareMore />
+                      <span className="text-nowrap">Aún no tienes conversaciones</span>
+                      <span>¡Empieza a chatear!</span>
+                    </div>
+                  )
+                }
               </SidebarMenu>
             </ScrollArea>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupContent>
-            <Button className="w-full flex justify-between my-3 !px-5 py-4 h-auto cursor-pointer">
+            <Button className="w-full flex justify-between my-3 md:mb-0 !px-5 py-4 h-auto cursor-pointer" onClick={handleNewChat}>
               <span className="text-base">Nuevo chat</span>
               <SquarePen className="!w-6 !h-6"></SquarePen>
             </Button>
