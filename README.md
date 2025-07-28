@@ -51,14 +51,27 @@ Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** q
 
    ```
 
-2. **Instalar las dependencias**
+1. **Instalar Node.js**
+
+   Este proyecto requiere **Node.js v20.x o superior** (por compatibilidad con Next.js 15).
+
+   [https://nodejs.org/](https://nodejs.org/)
+
+1. **Instalar pnpm**
+
+   ```bash
+   npm install -g pnpm
+
+   ```
+
+1. **Instalar las dependencias**
 
    ```bash
    pnpm install
 
    ```
 
-3. **Ejecutar el entorno de desarrollo**
+1. **Ejecutar el entorno de desarrollo**
    ```bash
    pnpm run dev
    ```
