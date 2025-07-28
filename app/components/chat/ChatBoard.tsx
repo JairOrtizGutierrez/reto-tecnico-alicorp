@@ -4,7 +4,7 @@ import { getChatResponseQueryOptions } from "@/lib/query";
 import { useQuery } from "@tanstack/react-query";
 import { ChatQuestion } from "@/components/chat/ChatQuestion";
 import { ChatAnswer } from "@/components/chat/ChatAnswer";
-import { useStore } from "@/hooks/useStore";
+import { useStore } from "@/store/useStore";
 import { useEffect } from "react";
 
 export const ChatBoard = () => {
@@ -23,7 +23,7 @@ export const ChatBoard = () => {
       className={`w-full lg:w-140 xl:w-200 ${data.userMessages && data.userMessages.length ? "py-20 px-10" : ""}`}
     >
       {data.userMessages
-        ? data.userMessages.map((message, index) => {
+        ? data.userMessages.map((message, index: number) => {
             return (
               <div key={index} className="flex flex-col">
                 <ChatQuestion response={message} />

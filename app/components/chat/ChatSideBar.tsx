@@ -10,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -33,7 +32,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getChatHistoryQueryOptions } from "@/lib/query";
 import { useDeleteChat } from "@/hooks/useDeleteChat";
 import gsap from "gsap";
-import { useStore } from "@/hooks/useStore";
+import { useStore } from "@/store/useStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IHistory } from "@/models/IHistory";
 

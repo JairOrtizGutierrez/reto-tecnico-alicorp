@@ -7,7 +7,7 @@ import { Paperclip, SendHorizontal, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ChatFilePreview } from "@/components/chat/ChatFilePreview";
 import gsap from "gsap";
-import { useStore } from "@/hooks/useStore";
+import { useStore } from "@/store/useStore";
 import { toast } from "sonner";
 import { TypeAnimation } from "react-type-animation";
 

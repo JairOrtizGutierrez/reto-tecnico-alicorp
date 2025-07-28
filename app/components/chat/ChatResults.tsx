@@ -1,4 +1,4 @@
-import { useStore } from "@/hooks/useStore";
+import { useStore } from "@/store/useStore";
 import { getChatSimiliarityQueryOptions } from "@/lib/query";
 import { useQuery } from "@tanstack/react-query";
 import {
