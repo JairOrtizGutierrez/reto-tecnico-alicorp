@@ -7,8 +7,8 @@ export const useSendMessage = (isEmptyChat: boolean) => {
   return useMutation({
     mutationFn: (message: IMessage) => sendChatMessage(message),
     onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['chat'] })
-      if (isEmptyChat) queryClient.invalidateQueries({ queryKey: ['history'] })
+      queryClient.invalidateQueries({ queryKey: ["chat"] });
+      if (isEmptyChat) queryClient.invalidateQueries({ queryKey: ["history"] });
     },
-  })
-}
+  });
+};

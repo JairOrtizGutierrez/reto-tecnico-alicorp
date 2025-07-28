@@ -6,7 +6,7 @@ export const useSearchChat = () => {
   return useMutation({
     mutationFn: (query: string) => searchChat(query),
     onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['similiarity'] })
+      queryClient.invalidateQueries({ queryKey: ["similiarity"] });
     },
-  })
-}
+  });
+};

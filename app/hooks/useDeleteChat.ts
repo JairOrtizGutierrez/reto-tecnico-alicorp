@@ -3,6 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useDeleteChat = () => {
   return useMutation({
-    mutationFn: (id: string) => deleteChat(id)
-  })
-}
+    mutationFn: (id: string) => deleteChat(id),
+  });
+};

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ChatSideBar } from "@/components/ui/chat/ChatSideBar";
-import { ChatInput } from "@/components/ui/chat/ChatInput";
-import { ChatBoard } from "@/components/ui/chat/ChatBoard";
-import { SidebarTrigger } from "./components/ui/sidebar";
-import { ScrollArea } from "./components/ui/scroll-area";
+import { ChatSideBar } from "@/components/chat/ChatSideBar";
+import { ChatInput } from "@/components/chat/ChatInput";
+import { ChatBoard } from "@/components/chat/ChatBoard";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Home() {
   return (

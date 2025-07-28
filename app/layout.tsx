@@ -12,7 +12,8 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "Conversaciones Interactivas con IA",
-  description: "Plataforma interactiva que ofrece conversaciones inteligentes, respuestas rápidas y asistencia automatizada en tiempo real",
+  description:
+    "Plataforma interactiva que ofrece conversaciones inteligentes, respuestas rápidas y asistencia automatizada en tiempo real",
 };
 
 export default function RootLayout({
@@ -24,9 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} antialiased dark`}>
         <QueryProvider>
-          <SidebarProvider>
-            {children}
-          </SidebarProvider>
+          <SidebarProvider>{children}</SidebarProvider>
         </QueryProvider>
         <Toaster />
       </body>

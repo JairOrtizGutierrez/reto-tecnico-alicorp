@@ -1,4 +1,4 @@
-import { IFile } from "./IFile";
+import { IFile } from "@/models/IFile";
 
 export interface IMessage {
   id: string;
