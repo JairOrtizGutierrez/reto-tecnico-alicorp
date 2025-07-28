@@ -9,14 +9,15 @@ import { ChatFilePreview } from "@/components/ui/chat/ChatFilePreview";
 import gsap from "gsap";
 import { useStore } from "@/hooks/useStore";
 import { toast } from "sonner";
+import { TypeAnimation } from "react-type-animation";
 
 const MAX_SIZE = 1 * 1024 * 1024;
 
 export const ChatInput = () => {
-  const { id, isResumed, stopResuming } = useStore();
+  const { id, isResumed, stopResuming, isEmptyChat } = useStore();
   const [hideTitle, setHideTitle] = useState(false);
   const [customFile, setCustomFile] = useState<File | null>(null);
-  const { mutate } = useSendMessage();
+  const { mutate } = useSendMessage(isEmptyChat);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,9 +34,9 @@ export const ChatInput = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (isResumed) stopResuming();
     const message = messageInputRef.current?.value ?? '';
     if (!message.trim().length && !customFile) return;
-    if (isResumed) stopResuming();
 
     let file;
     if (customFile) {
@@ -85,7 +86,14 @@ export const ChatInput = () => {
 
   return (
     <div id="main-input" className="absolute bottom-1/2 left-1/2 transform translate-y-1/2 -translate-x-1/2 w-full flex flex-col items-center justify-center">
-      <h1 className={`${hideTitle ? 'hidden' : ''} scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance text-neutral-300`}>¿Cómo te puedo ayudar hoy?</h1>
+      <h1 className={`${hideTitle ? 'hidden' : ''} scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance text-neutral-300 h-10`}>
+        <TypeAnimation
+          sequence={['¿Cómo te puedo ayudar hoy?']}
+          cursor={false}
+          className="block"
+          speed={80}
+        />
+      </h1>
       <form onSubmit={handleSubmit} className="flex justify-center items-center w-full lg:w-140 xl:w-200 px-10">
         <div className="flex flex-col justify-center items-start bg-white text-neutral-950 px-3 py-2 rounded-xl my-12 w-full">
           {customFile && (

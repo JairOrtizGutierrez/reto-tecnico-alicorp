@@ -22,10 +22,11 @@ const CustomMessageContainer: React.FC<CustomMessageContainerProps> = ({ Icon, t
 
 export const ChatResults: React.FC<ChatResultsProps> = ({ query, toggleModal }) => {
   const { changeId, startResuming } = useStore();
-  const { data, isLoading, error } = useQuery(getChatSimiliarityQueryOptions(query));
+  const { data, isLoading, error, isRefetching } = useQuery(getChatSimiliarityQueryOptions(query));
 
   if (!query.length) return <CustomMessageContainer Icon={MessageSquareX} text='Sin resultados' />
   if (isLoading) return <CustomMessageContainer Icon={LoaderCircle} text='Cargando' />
+  if (isRefetching) return <CustomMessageContainer Icon={LoaderCircle} text='Cargando' />
   if (error) return <CustomMessageContainer Icon={CircleX} text='Error' />
 
   const handleOpenChat = (id: string) => {

@@ -1,7 +1,6 @@
-
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarSeparator } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Frown, MessageSquare, MessageSquareMore, MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
+import { CircleX, MessageSquare, MessageSquareMore, MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ChatFinder } from "@/components/ui/chat/ChatFinder"
@@ -10,37 +9,87 @@ import { getChatHistoryQueryOptions } from "@/lib/query"
 import { useDeleteChat } from "@/hooks/useDeleteChat"
 import gsap from "gsap"
 import { useStore } from "@/hooks/useStore"
+import { Skeleton } from "@/components/ui/skeleton"
+import { IHistory } from "@/models/IHistory"
 
-const items = [
-  {
-    title: "Home",
-    url: "#",
-  },
-  {
-    title: "Inbox",
-    url: "#",
-  },
-  {
-    title: "Calendar",
-    url: "#",
-  },
-  {
-    title: "Search",
-    url: "#",
-  },
-  {
-    title: "Settings",
-    url: "#",
+interface ChatSideBarStateHandlerProps {
+  data?: IHistory[];
+  isLoading: boolean;
+  error: Error | null;
+  isRefetching: boolean;
+  handleOpenChat: (id: string) => void;
+  handleDeleteChat: (id: string) => void;
+}
+
+const ChatSideBarStateHandler: React.FC<ChatSideBarStateHandlerProps> = ({ data, isLoading, error, isRefetching, handleOpenChat, handleDeleteChat }) => {
+  if (isLoading) return (
+    <div className="space-y-2">
+      <div className="opacity-100"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-75"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-50"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-25"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-10"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+    </div>
+  )
+  if (error) return (
+    <div className="text-neutral-400 text-center flex flex-col justify-center items-center gap-2 absolute top-1/2 left-1/2 transform -translate-1/2">
+      <CircleX />
+      <span className="text-nowrap">Ha ocurrido un error</span>
+    </div>
+  )
+  if (isRefetching) return (
+    <div className="space-y-2">
+      <div className="opacity-100"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-75"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-50"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-25"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+      <div className="opacity-10"><Skeleton className="h-[60px] w-full bg-neutral-600" /></div>
+    </div>
+  )
+  if (data && data.length) {
+    return (
+      data.map((item) => (
+        <SidebarMenuItem key={item.id} className={`bg-neutral-700 rounded-md overflow-hidden mb-2 last:mb-0 item-${item.id}`}>
+          <SidebarMenuButton asChild className="hover:bg-neutral-600 h-auto px-4 py-3 gap-3 cursor-pointer" onClick={() => handleOpenChat(item.id)}>
+            <div>
+              <MessageSquare />
+              <div className="flex flex-col w-[85%]">
+                <span>{item.title}</span>
+                <span className="text-xs text-neutral-400 overflow-x-hidden whitespace-nowrap overflow-ellipsis">{item.info}</span>
+              </div>
+            </div>
+          </SidebarMenuButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="!top-1/2 -translate-y-1/2 right-3">
+              <SidebarMenuAction>
+                <MoreHorizontal />
+              </SidebarMenuAction>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="start">
+              <DropdownMenuItem variant="destructive" onClick={() => handleDeleteChat(item.id)}>
+                <Trash2 />
+                <span>Eliminar</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      ))
+    )
+  } else {
+    return (
+      <div className="text-neutral-400 text-center flex flex-col justify-center items-center gap-2 absolute top-1/2 left-1/2 transform -translate-1/2">
+        <MessageSquareMore />
+        <span className="text-nowrap">Aún no tienes conversaciones</span>
+        <span>¡Empieza a chatear!</span>
+      </div>
+    )
   }
-]
+}
 
 export const ChatSideBar = () => {
   const { changeId, regenerateId, startResuming, stopResuming } = useStore();
-  const { data, isLoading, error } = useQuery(getChatHistoryQueryOptions());
+  const { data, isLoading, error, isRefetching } = useQuery(getChatHistoryQueryOptions());
   const { mutate } = useDeleteChat();
-
-  if (isLoading) return <div>Loading</div>
-  if (error || !data) return <div>Error</div>
 
   const handleDeleteChat = (id: string) => {
     gsap.to(`.item-${id}`, {
@@ -70,7 +119,6 @@ export const ChatSideBar = () => {
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="h-auto">
               <div>
-                {/* <Brain className="!w-6 !h-6" /> */}
                 <span className="text-base">Mis chats</span>
               </div>
             </SidebarMenuButton>
@@ -88,40 +136,7 @@ export const ChatSideBar = () => {
           <SidebarGroupContent className="h-[calc(100%-40px)]">
             <ScrollArea className="h-full [&_[data-slot=scroll-area-viewport]>div]:block!">
               <SidebarMenu className="gap-0">
-                {
-                  data.length ? data.map((item) => (
-                    <SidebarMenuItem key={item.id} className={`bg-neutral-700 rounded-md overflow-hidden mb-2 last:mb-0 item-${item.id}`}>
-                      <SidebarMenuButton asChild className="hover:bg-neutral-600 h-auto px-4 py-3 gap-3 cursor-pointer" onClick={() => handleOpenChat(item.id)}>
-                        <div>
-                          <MessageSquare />
-                          <div className="flex flex-col w-[85%]">
-                            <span>{item.title}</span>
-                            <span className="text-xs text-neutral-400 overflow-x-hidden whitespace-nowrap overflow-ellipsis">{item.info}</span>
-                          </div>
-                        </div>
-                      </SidebarMenuButton>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild className="!top-1/2 -translate-y-1/2 right-3">
-                          <SidebarMenuAction>
-                            <MoreHorizontal />
-                          </SidebarMenuAction>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right" align="start">
-                          <DropdownMenuItem variant="destructive" onClick={() => handleDeleteChat(item.id)}>
-                            <Trash2 />
-                            <span>Eliminar</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </SidebarMenuItem>
-                  )) : (
-                    <div className="text-neutral-400 text-center flex flex-col justify-center items-center gap-2 absolute top-1/2 left-1/2 transform -translate-1/2">
-                      <MessageSquareMore />
-                      <span className="text-nowrap">Aún no tienes conversaciones</span>
-                      <span>¡Empieza a chatear!</span>
-                    </div>
-                  )
-                }
+                <ChatSideBarStateHandler data={data} isLoading={isLoading} error={error} isRefetching={isRefetching} handleOpenChat={handleOpenChat} handleDeleteChat={handleDeleteChat} />
               </SidebarMenu>
             </ScrollArea>
           </SidebarGroupContent>

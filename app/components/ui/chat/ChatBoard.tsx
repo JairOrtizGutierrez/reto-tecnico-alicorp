@@ -5,12 +5,19 @@ import { useQuery } from "@tanstack/react-query";
 import { ChatQuestion } from "@/components/ui/chat/ChatQuestion";
 import { ChatAnswer } from "@/components/ui/chat/ChatAnswer";
 import { useStore } from "@/hooks/useStore";
+import { useEffect } from "react";
 
 export const ChatBoard = () => {
-  const { id, isResumed } = useStore();
+  const { id, isResumed, changeChatStatus } = useStore();
   const { data, isLoading, error } = useQuery(getChatResponseQueryOptions(id));
+
+  useEffect(() => {
+    changeChatStatus(data && Object.keys(data).length ? false : true);
+  }, [data]);
+
   if (isLoading) return <></>
   if (error || !data) return <></>
+
   return (
     <div className={`w-full lg:w-140 xl:w-200 ${data.userMessages && data.userMessages.length ? 'py-20 px-10' : ''}`}>
       {
