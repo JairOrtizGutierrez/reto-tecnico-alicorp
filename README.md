@@ -1,6 +1,19 @@
-# Chat Empresarial – Aplicación Web Interactiva
+<h1 align="center">
+  Asistente Virtual Inteligente<br>
+</h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="React Query" />
+  <img src="https://img.shields.io/badge/Zustand-FFB700?style=for-the-badge&logo=zustand&logoColor=white" alt="Zustand" />
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/GSAP-88C0D0?style=for-the-badge&logo=gsap&logoColor=black" alt="GSAP" />
+  <img src="https://img.shields.io/badge/ShadCN-2E2E2E?style=for-the-badge&logo=shadcn&logoColor=white" alt="ShadCN" />
+</p>
 
 Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** que permite a los usuarios realizar consultas sobre una empresa (misión, visión, organigrama, etc.), enviar archivos y revisar historiales de conversación. Las respuestas se generan simulando una API mediante **MSW** (Mock Service Worker).
+
+![Preview](https://i.imgur.com/ZMQT9M9.gif)
 
 ## 🚀 Funcionalidades Principales
 
