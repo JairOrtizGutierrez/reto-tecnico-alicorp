@@ -34,6 +34,7 @@ Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** q
 - **TanStack React Query** – Manejo de datos
 - **Zustand** – Estado global reactivo
 - **GSAP (GreenSock)** – Animaciones fluidas
+- **Biome** – Herramienta de formateo y linting unificada
 - **MSW (Mock Service Worker)** – Simulación de API
 - **pnpm** – Gestor de paquetes rápido
 - **TypeScript** – Tipado estricto
@@ -57,7 +58,48 @@ Este proyecto es una aplicación web tipo chat desarrollada con **Next.js 15** q
 
    ```
 
-3. **Ejecuta el entorno de desarrollo**
+3. **Ejecutar el entorno de desarrollo**
    ```bash
    pnpm run dev
    ```
+
+## 📁 Estructura del Proyecto
+
+```txt
+📁 components
+  ├── 📁 chat
+  │   ├── 📄 ChatAnswer.tsx           → Renderiza la respuesta del bot
+  │   ├── 📄 ChatBoard.tsx            → Muestra el contenido del chat
+  │   ├── 📄 ChatFilePreview.tsx      → Preview de imágenes o archivos
+  │   ├── 📄 ChatFinder.tsx           → Botón para buscar chats
+  │   ├── 📄 ChatInput.tsx            → Input principal para consultas
+  │   ├── 📄 ChatQuestion.tsx         → Mensaje del usuario
+  │   ├── 📄 ChatResults.tsx          → Resultados del buscador
+  │   ├── 📄 ChatSideBar.tsx          → Aside con historial de chats
+  ├── 📁 providers
+  │   └── 📄 QueryProvider.tsx        → Provider de React Query
+  └── 📁 ui                          → Componentes de ShadCN UI
+
+📁 hooks
+  ├── 📄 useDeleteChat.ts             → Elimina un chat
+  ├── 📄 useMobile.ts                 → Detecta si el usuario está en móvil
+  └── 📄 useSendMessage.ts            → Envía mensaje al servidor
+
+📁 store
+  └── 📄 useStore.ts                  → Estado global con Zustand
+
+📁 lib
+  ├── 📄 query.ts                     → Configuración de React Query
+  ├── 📄 utils.ts                     → Funciones utilitarias
+  └── 📁 actions
+      ├── 📄 deleteChat.ts            → Elimina un chat por ID
+      ├── 📄 getChatHistory.ts        → Obtiene historial completo de chats
+      ├── 📄 getChatResponse.ts       → Obtiene respuesta específica del chat
+      ├── 📄 searchChat.ts            → Busca chats que coincidan con criterio
+      └── 📄 sendChatMessage.ts       → Envía y guarda mensaje en el chat
+
+📁 models
+  ├── 📄 IFile.ts
+  ├── 📄 IHistory.ts
+  └── 📄 IMessage.ts
+```
