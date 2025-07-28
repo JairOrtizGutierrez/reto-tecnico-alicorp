@@ -8,6 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { ChatFilePreview } from "@/components/ui/chat/ChatFilePreview";
 import gsap from "gsap";
 import { useStore } from "@/hooks/useStore";
+import { toast } from "sonner";
+
+const MAX_SIZE = 1 * 1024 * 1024;
 
 export const ChatInput = () => {
   const { id, isResumed, stopResuming } = useStore();
@@ -46,13 +49,19 @@ export const ChatInput = () => {
     moveDown();
   }
 
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  }
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setCustomFile(file);
+    if (file) {
+      if (file.size > MAX_SIZE) {
+        toast.error("El archivo es demasiado grande", {
+          description: "El tamaño máximo es de 1 MB",
+        })
+        fileInputRef.current!.value = '';
+      } else {
+        setCustomFile(file);
+      }
+    }
+    messageInputRef.current?.focus();
   }
 
   const handleRemoveImage = () => {
@@ -81,16 +90,17 @@ export const ChatInput = () => {
         <div className="flex flex-col justify-center items-start bg-white text-neutral-950 px-3 py-2 rounded-xl my-12 w-full">
           {customFile && (
             <div className="pt-1 pb-2 relative">
-              <button className="absolute top-3 right-2 bg-white p-1 rounded-full cursor-pointer" onClick={handleRemoveImage}><X size={14} /></button>
+              <button type="button" className="absolute top-3 right-2 bg-white p-1 rounded-full cursor-pointer" onClick={handleRemoveImage}><X size={14} /></button>
               <ChatFilePreview data={URL.createObjectURL(customFile)} name={customFile.name} type={customFile.type} />
             </div>
           )}
           <div className="flex justify-center items-center w-full gap-4">
-            <Input type="text" ref={messageInputRef} autoComplete="off" placeholder="Pregunta lo que quieras" className="dark:bg-white dark:text-black placeholder:text-stone-500 border-none shadow-none focus-visible:ring-0" />
-            <button type="button" className="cursor-pointer" onClick={handleButtonClick}>
+            <Input type="text" ref={messageInputRef} name="message" autoComplete="off" placeholder="Pregunta lo que quieras" className="dark:bg-white dark:text-black placeholder:text-stone-500 border-none shadow-none focus-visible:ring-0" />
+            <label htmlFor="file" className="cursor-pointer">
               <Paperclip size={20} />
-            </button>
+            </label>
             <input
+              id="file"
               type="file"
               name="file"
               accept="image/*,application/pdf,video/mp4"
