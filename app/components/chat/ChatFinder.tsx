@@ -38,7 +38,7 @@ export const ChatFinder = () => {
             <span>Buscar chats</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="md:max-w-[650px] [&>button:last-child]:hidden bg-neutral-800">
+        <DialogContent className="md:max-w-[650px] [&>button:last-child]:hidden bg-neutral-800 flex flex-col">
           <DialogHeader className="flex flex-row gap-x-4">
             <DialogTitle className="hidden">Buscar chats</DialogTitle>
             <Input
