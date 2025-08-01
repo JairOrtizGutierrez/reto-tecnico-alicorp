@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -165,6 +166,7 @@ export const ChatSideBar = () => {
     getChatHistoryQueryOptions(),
   );
   const { mutate } = useDeleteChat();
+  const { setOpenMobile } = useSidebar();
 
   const handleDeleteChat = (id: string) => {
     if (currentId === id) {
@@ -185,11 +187,13 @@ export const ChatSideBar = () => {
   const handleOpenChat = (id: string) => {
     changeId(id);
     startResuming();
+    setOpenMobile(false);
   };
 
   const handleNewChat = () => {
     regenerateId();
     stopResuming();
+    setOpenMobile(false);
   };
 
   return (
